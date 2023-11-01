@@ -67,3 +67,95 @@ public void method() {
     }
 }
 ```
+
+## 4. Reentrant Locks and Conditions:
+
+- Introduction to ReentrantLock: An explicit locking mechanism that offers more flexibility than intrinsic locks.
+- Conditions: Using Condition objects to control thread access and coordination.
+
+Examples:
+
+```java
+// ReentrantLock
+ReentrantLock lock = new ReentrantLock();
+lock.lock();
+try {
+    // critical section
+} finally {
+    lock.unlock();
+}
+
+// Conditions
+ReentrantLock lock = new ReentrantLock();
+Condition condition = lock.newCondition();
+
+lock.lock();
+try {
+    while (/* condition not met */) {
+        condition.await();
+    }
+    // critical section
+    condition.signalAll();
+} finally {
+    lock.unlock();
+}
+```
+
+## 5. Strategies for Deadlock Prevention and Avoidance:
+
+- Understanding Deadlocks: The four necessary conditions for a deadlock.
+- Prevention: Breaking the conditions required for a deadlock.
+
+Example:
+
+```java
+Object resource1 = new Object();
+Object resource2 = new Object();
+
+Thread t1 = new Thread(() -> {
+    synchronized(resource1) {
+        // ...
+        synchronized(resource2) {
+            // ...
+        }
+    }
+});
+
+Thread t2 = new Thread(() -> {
+    synchronized(resource2) {
+        // ...
+        synchronized(resource1) {
+            // ...
+        }
+    }
+});
+
+t1.start();
+t2.start();
+```
+
+## 6. Case Studies: Problems When Sharing Resources:
+
+- Shared Resource Conflicts: Real-world scenarios where multiple threads access shared resources leading to issues.
+
+Example:
+
+```java
+public class SharedResource {
+    private int value = 0;
+
+    public synchronized void increment() {
+        value++;
+    }
+
+    public synchronized int getValue() {
+        return value;
+    }
+}
+```
+
+# Dining Philosophers
+
+![Dining Philosophers](https://upload.wikimedia.org/wikipedia/commons/7/7b/An_illustration_of_the_dining_philosophers_problem.png)
+
+
