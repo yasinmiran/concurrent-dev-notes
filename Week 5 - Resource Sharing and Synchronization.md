@@ -156,6 +156,62 @@ public class SharedResource {
 
 # Dining Philosophers
 
+Five silent philosophers sit at a round table with bowls of spaghetti. Forks are placed between each pair of adjacent philosophers. Each philosopher must alternately think and eat. However, a philosopher can only eat spaghetti when they have both left and right forks. A fork can be held by only one philosopher and so a philosopher can use the fork only if it's not being used by another philosopher. After an individual philosopher finishes eating, they need to put down both forks so that the forks become available to others. A philosopher can take the fork on their right or the one on their left as they become available, but can't start eating before getting both forks.
+
 ![Dining Philosophers](https://upload.wikimedia.org/wikipedia/commons/7/7b/An_illustration_of_the_dining_philosophers_problem.png)
 
+The challenge is to design a protocol that allows the philosophers to eat without any deadlock (a state where everyone is waiting and no one is eating).
 
+### Potential Issues:
+
+1. Deadlock: All philosophers pick up their left fork at the same time. No one can pick up a right fork, so no one eats.
+2. Starvation: Philosophers could be polite and always give up their forks for others, leading to a situation where one or more philosophers never get to eat.
+
+```java
+class Philosopher extends Thread {
+    private final Object leftFork;
+    private final Object rightFork;
+
+    Philosopher(Object leftFork, Object rightFork) {
+        this.leftFork = leftFork;
+        this.rightFork = rightFork;
+    }
+
+    void eat() {
+        synchronized (leftFork) {
+            synchronized (rightFork) {
+                System.out.println(Thread.currentThread().getName() + " is eating...");
+            }
+        }
+    }
+
+    @Override
+    public void run() {
+        while (true) {
+            eat();
+        }
+    }
+}
+
+public class DiningPhilosophers {
+    public static void main(String[] args) {
+        final Object fork1 = new Object();
+        final Object fork2 = new Object();
+        final Object fork3 = new Object();
+        final Object fork4 = new Object();
+        final Object fork5 = new Object();
+
+        Philosopher p1 = new Philosopher(fork1, fork2);
+        Philosopher p2 = new Philosopher(fork2, fork3);
+        Philosopher p3 = new Philosopher(fork3, fork4);
+        Philosopher p4 = new Philosopher(fork4, fork5);
+        Philosopher p5 = new Philosopher(fork5, fork1);
+
+        p1.start();
+        p2.start();
+        p3.start();
+        p4.start();
+        p5.start();
+    }
+}
+```
