@@ -215,3 +215,15 @@ public class DiningPhilosophers {
     }
 }
 ```
+
+### The solution to Avoid Deadlock:
+
+One common solution to avoid deadlock is to introduce some asymmetry. For instance:
+
+1. Odd-Even Solution: Philosophers are numbered from 1 to 5. Odd-numbered philosophers pick up their left fork first, then their right, while even-numbered philosophers pick up their right fork first, then their left. This ensures that at least one philosopher (the one with both an odd and even neighbour) can eat.
+
+2. Waiter Solution: Introduce a waiter at the table. Philosophers must ask the waiter's permission before picking up their forks. The waiter gives permission to only one philosopher at a time, ensuring that a maximum of two philosophers sitting next to each other can eat at the same time.
+
+3. Resource Hierarchy Solution: Number the forks and always pick up the lower-numbered fork first. If a philosopher can't pick up both forks, they release any fork they have picked up. This ensures that a philosopher can't prevent their neighbours from eating.
+
+
