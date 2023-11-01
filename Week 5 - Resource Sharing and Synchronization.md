@@ -45,9 +45,40 @@ public synchronized void synchronizedMethod() {
 
 ## 2. Object and Class-level Locking:
 
-Object-level Locking: Using the intrinsic lock of an object to ensure mutual exclusion.
+## The Essence of Locking:
+At the heart of synchronization in Java is the concept of the intrinsic lock or monitor lock. Every object in Java has an intrinsic lock associated with it. By convention, a thread that needs exclusive and consistent access to an object's fields has to acquire the object's intrinsic lock before accessing them and then release the intrinsic lock when it's done with them.
 
-Class-level Locking: Synchronizing on the class's Class object.
+## Object-level Locking:
+
+- Definition: Object-level locking is the synchronization of a non-static method or block of code using the instance (or another instance) of the class's intrinsic lock.
+- Purpose: It ensures that only one thread can execute a synchronized method or block on a given instance of the class. Other threads attempting to execute the method or block on the same instance will be blocked until the lock is released.
+- Usage: Often used when you want to protect the state of the object. If two threads are working on two different instances, they won't block each other.
+
+## Class-level Locking:
+
+- Definition: Class-level locking is the synchronization of a static method or block of code using the Class object's intrinsic lock.
+- Purpose: It ensures that only one thread can execute a synchronized static method or block across all instances of the class. This is because the lock is associated with the class itself, not individual instances.
+- Usage: Typically used for protecting static fields or ensuring global actions across all instances.
+
+## Synchronized Blocks vs. Synchronized Methods:
+
+- Synchronized Blocks: Allow more granular control over what part of the method needs synchronization. It's possible to lock on different objects within different synchronized blocks.
+- Synchronized Methods: The entire method is synchronized, and the lock is either on the current instance (for non-static methods) or on the Class object (for static methods).
+
+## Potential Issues with Locking:
+
+- Deadlocks: Can occur if two or more threads wait forever for a lock or locks that the other threads are holding.
+- Increased Latency: Over-synchronization can lead to performance issues, as threads may spend more time waiting to acquire locks than doing actual work.
+- Reduced Throughput: When many threads are contending for the same lock, it can reduce the overall throughput of the application.
+
+## Best Practices:
+
+- Minimize Lock Contention: The time for which a lock is held should be minimized to reduce the chances of contention.
+- Avoid Nested Locks: Acquiring multiple locks can increase the chances of deadlocks.
+- Consistency in Lock Acquisition Order: Always acquire locks in a consistent order to avoid deadlocks.
+- Use Separate Locks: If possible, use separate locks for separate independent variables to increase concurrency.
+
+Example:
 
 ```java
 // Object-level Locking
